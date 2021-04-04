@@ -10,6 +10,10 @@
     <template #left>
       <AddOperators />
     </template>
+
+    <template #right>
+      <PictureCounter />
+    </template>
     <template #footer>
       <BasicButton class="w-full"> Save </BasicButton>
     </template>
@@ -21,6 +25,7 @@ import PageLayout from "./components/PageLayout";
 import SelectDropdown from "./components/SelectDropdown";
 import BasicButton from "./components/BasicButton";
 import AddOperators from "./components/AddOperators";
+import PictureCounter from "./components/PictureCounter";
 export default {
   name: "App",
   components: {
@@ -28,6 +33,7 @@ export default {
     PageLayout,
     BasicButton,
     AddOperators,
+    PictureCounter,
   },
   data() {
     return {
