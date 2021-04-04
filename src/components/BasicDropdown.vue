@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <slot :show="show" :hide="hide"></slot>
+  <div :class="{ 'mt-1 relative': true, 'z-20': shown }">
+    <slot :show="show" :hide="hide" :toggle="toggle"></slot>
     <transition
       leave-active-class="transition-all"
       leave-class="opacity-100"
@@ -85,8 +85,8 @@ export default {
     },
   },
   methods: {
-    select({ key }) {
-      this.$emit("select", key);
+    select(option) {
+      this.$emit("select", option);
     },
     highlight({ key }) {
       this.highlighted = key;
@@ -101,6 +101,9 @@ export default {
     },
     hide() {
       this.shown = false;
+    },
+    toggle() {
+      this.shown = !this.shown;
     },
   },
 };

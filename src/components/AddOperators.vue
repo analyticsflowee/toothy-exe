@@ -72,7 +72,7 @@ export default {
     },
   },
   methods: {
-    toggleSelected(key) {
+    toggleSelected({ key }) {
       if (this.selected.includes(key)) {
         this.selected = this.selected.filter((k) => k !== key);
       } else {
