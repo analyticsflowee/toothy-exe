@@ -17,7 +17,14 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@heroicons/vue": "^1.0.0",
+    "@tailwindcss/forms": "^0.3.2",
+    "@tailwindcss/postcss7-compat": "^2.0.2",
+    "autoprefixer": "^9",
     "core-js": "^3.6.5",
+    "lodash": "^4.17.21",
+    "postcss": "^7",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
     "vue": "^2.6.11"
   },
   "devDependencies": {
@@ -33,6 +40,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "prettier": "^2.2.1",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.6",
+    "vue-cli-plugin-tailwind": "~2.0.6",
     "vue-template-compiler": "^2.6.11"
   }
 }
