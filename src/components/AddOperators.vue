@@ -1,8 +1,8 @@
 <template>
   <div>
-    <label for="addOperators" class="block text-sm font-medium text-gray-700">
-      <slot></slot
-    ></label>
+    <label for="addOperators" class="block text-md font-bold text-gray-700">
+      Add Operators
+    </label>
     <div class="mt-1 relative rounded-md shadow-sm">
       <BasicDropdown
         :selected="selected"
@@ -14,7 +14,7 @@
             type="text"
             name="add-operators"
             id="addOperators"
-            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-10 sm:text-sm border-gray-300 rounded-md"
+            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-10 sm:text-sm border-gray-300 rounded-md h-9"
             placeholder="Add operators"
             v-model="search"
             @keydown.esc="hide"
@@ -32,7 +32,7 @@
       <li
         v-for="operator in parsedSelected"
         :key="operator.key"
-        class="bg-white shadow overflow-hidden rounded-md px-3 py-3 inline-flex w-full justify-between"
+        class="bg-white shadow overflow-hidden rounded-md px-3 inline-flex w-full justify-between items-center h-9"
       >
         <span>
           {{ operator.label }}
