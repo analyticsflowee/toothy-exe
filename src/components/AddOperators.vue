@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <label for="addOperators" class="block text-md font-bold text-gray-700">
-      Add Operators
-    </label>
+  <WithLabel for-attribute="addOperators" label="Add Operators">
     <div class="mt-1 relative rounded-md shadow-sm">
       <BasicDropdown
         :selected="selected"
@@ -42,18 +39,20 @@
         </button>
       </li>
     </ul>
-  </div>
+  </WithLabel>
 </template>
 
 <script>
 import { SearchIcon, CrossIcon } from "./icons";
 import BasicDropdown from "./BasicDropdown";
+import WithLabel from "./WithLabel";
 
 export default {
   components: {
     SearchIcon,
     CrossIcon,
     BasicDropdown,
+    WithLabel,
   },
   data() {
     return {
