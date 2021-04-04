@@ -1,11 +1,13 @@
 <template>
   <PageLayout>
-    <template #left>
+    <template #top-left>
       <SelectDropdown
         name="cabinet-select"
         :options="cabinetOptions"
         v-model="selectedCabinet"
       />
+    </template>
+    <template #left>
       <AddOperators />
     </template>
     <template #footer>
@@ -29,7 +31,7 @@ export default {
   },
   data() {
     return {
-      selectedCabinet: "",
+      selectedCabinet: {},
     };
   },
   computed: {
