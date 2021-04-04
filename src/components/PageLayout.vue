@@ -21,7 +21,7 @@
             <div class="col-span-2 row-span-3">
               <slot name="left"></slot>
             </div>
-            <div class="col-span-4 row-span-3">
+            <div class="col-span-3 col-start-4 row-span-3">
               <slot name="right"></slot>
             </div>
             <div class="col-span-6 mt-4">
