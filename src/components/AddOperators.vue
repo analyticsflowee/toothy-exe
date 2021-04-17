@@ -16,6 +16,7 @@
             v-model="search"
             @keydown.esc="hide"
             @keydown.enter="show"
+            @focus="show"
           />
           <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
             <button @click="show">
@@ -46,6 +47,7 @@
 import { SearchIcon, CrossIcon } from "./icons";
 import BasicDropdown from "./basic/BasicDropdown";
 import WithLabel from "./WithLabel";
+import { db } from "@/db";
 
 export default {
   components: {
@@ -54,18 +56,23 @@ export default {
     BasicDropdown,
     WithLabel,
   },
+  props: {
+    clinicId: {
+      type: String,
+      default: null,
+    },
+  },
   data() {
     return {
       search: "",
-      searchData: [
-        { key: 1, label: "Operator 1" },
-        { key: 2, label: "Operator 2" },
-        { key: 3, label: "Operator 3" },
-      ],
+      workers: [],
       selected: [1, 2],
     };
   },
   computed: {
+    searchData() {
+      return this.workers.map((w) => ({ key: w.clinicUID, label: w.name }));
+    },
     parsedSelected() {
       return this.searchData.filter((o) => this.selected.includes(o.key));
     },
@@ -77,6 +84,19 @@ export default {
       } else {
         this.selected.push(key);
       }
+    },
+  },
+  watch: {
+    clinicId: {
+      immediate: true,
+      handler(clinicId) {
+        if (clinicId) {
+          this.$bind(
+            "workers",
+            db.collection("workers").where("clinicUID", "==", this.clinicId)
+          );
+        }
+      },
     },
   },
 };
