@@ -70,6 +70,7 @@ export default {
       });
       this.workers = [];
       this.snapshots = this.snapshots.map((s) => ({ ...s, value: 0 }));
+      window.ipcRenderer.invoke("hide");
     },
   },
   async mounted() {

@@ -90,10 +90,14 @@ app.on("ready", async () => {
       console.error("Vue Devtools failed to install:", e.toString());
     }
   }
-  ipcMain.handle("get-processes", getProcesses);
 
   const win = await createWindow();
   setInterval(() => scanProcesses(win), 2000);
+
+  ipcMain.handle("get-processes", getProcesses);
+  ipcMain.handle("hide", () => {
+    return win.minimize();
+  });
 });
 
 // Exit cleanly on request from parent process in development mode.
