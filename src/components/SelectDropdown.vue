@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import BasicDropdown from "./BasicDropdown";
+import BasicDropdown from "./basic/BasicDropdown";
 import { SelectorIcon } from "./icons";
 export default {
   components: {

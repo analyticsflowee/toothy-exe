@@ -44,7 +44,7 @@
 
 <script>
 import { SearchIcon, CrossIcon } from "./icons";
-import BasicDropdown from "./BasicDropdown";
+import BasicDropdown from "./basic/BasicDropdown";
 import WithLabel from "./WithLabel";
 
 export default {

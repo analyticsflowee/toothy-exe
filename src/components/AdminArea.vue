@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import BasicButton from "./BasicButton";
+import BasicButton from "@/components/basic/BasicButton";
 
 export default {
   components: { BasicButton },

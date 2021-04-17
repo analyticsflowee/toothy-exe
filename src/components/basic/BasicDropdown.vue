@@ -1,5 +1,8 @@
 <template>
-  <div :class="{ 'mt-1 relative': true, 'z-20': shown }">
+  <div
+    :class="{ 'mt-1 relative': true, 'z-20': shown }"
+    @click.capture.prevent.stop
+  >
     <slot :show="show" :hide="hide" :toggle="toggle"></slot>
     <transition
       leave-active-class="transition-all"
@@ -54,7 +57,7 @@
 </template>
 
 <script>
-import { CheckIcon } from "./icons";
+import { CheckIcon } from "../icons";
 export default {
   components: {
     CheckIcon,
@@ -83,6 +86,12 @@ export default {
         highlighted: this.highlighted === o.key,
       }));
     },
+  },
+  mounted() {
+    window.document.body.addEventListener("click", this.hide, false);
+  },
+  beforeDestroy() {
+    window.document.body.removeEventListener("click", this.hide, false);
   },
   methods: {
     select(option) {
