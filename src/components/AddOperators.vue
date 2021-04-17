@@ -2,7 +2,7 @@
   <WithLabel for-attribute="addOperators" label="Add Operators">
     <div class="mt-1 relative rounded-md shadow-sm">
       <BasicDropdown
-        :selected="selected"
+        :selected="value"
         :options="searchData"
         @select="toggleSelected"
       >
@@ -61,12 +61,15 @@ export default {
       type: String,
       default: null,
     },
+    value: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
       search: "",
       workers: [],
-      selected: [1, 2],
     };
   },
   computed: {
@@ -74,16 +77,18 @@ export default {
       return this.workers.map((w) => ({ key: w.clinicUID, label: w.name }));
     },
     parsedSelected() {
-      return this.searchData.filter((o) => this.selected.includes(o.key));
+      return this.searchData.filter((o) => this.value.includes(o.key));
     },
   },
   methods: {
     toggleSelected({ key }) {
-      if (this.selected.includes(key)) {
-        this.selected = this.selected.filter((k) => k !== key);
+      let selected = [...this.value];
+      if (selected.includes(key)) {
+        selected = selected.filter((k) => k !== key);
       } else {
-        this.selected.push(key);
+        selected.push(key);
       }
+      this.$emit("input", selected);
     },
   },
   watch: {

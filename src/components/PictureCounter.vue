@@ -1,7 +1,7 @@
 <template>
   <WithLabel for-attribute="addOperators" label="Set pictures">
     <ItemCounter
-      v-for="(value, index) in values"
+      v-for="(value, index) in value"
       :value="value.value"
       :key="index"
       @plus="plus(index)"
@@ -24,34 +24,32 @@ export default {
     WithLabel,
     ItemCounter,
   },
-  data() {
-    return {
-      values: [
-        { value: 1, label: "Intracranial" },
-        { value: 3, label: "2D Panoramic" },
-        { value: 3, label: "3D Sector" },
-        { value: 3, label: "3D Something/Else" },
-        { value: 3, label: "3D Another one" },
-        { value: 3, label: "SEHP something" },
-      ],
-    };
+  props: {
+    value: {
+      type: Array,
+      default: () => [],
+    },
   },
   computed: {
     total() {
-      return this.values.reduce((acc, cur) => {
+      return this.value.reduce((acc, cur) => {
         return acc + cur.value;
       }, 0);
     },
   },
   methods: {
     plus(index) {
-      const item = this.values[index];
-      this.values.splice(index, 1, { ...item, value: item.value + 1 });
+      const updated = this.value.map((s) => ({ ...s }));
+      const item = this.value[index];
+      updated.splice(index, 1, { ...item, value: item.value + 1 });
+      this.$emit("input", updated);
     },
     minus(index) {
-      const item = this.values[index];
+      const updated = this.value.map((s) => ({ ...s }));
+      const item = this.value[index];
       const value = Math.max(item.value - 1, 0);
-      this.values.splice(index, 1, { ...item, value });
+      updated.splice(index, 1, { ...item, value });
+      this.$emit("input", updated);
     },
   },
 };

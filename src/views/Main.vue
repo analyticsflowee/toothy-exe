@@ -1,16 +1,16 @@
 <template>
   <PageLayout v-if="!showAdmin">
     <template #left>
-      <AddOperators :clinic-id="cabinetData.clinicUID" />
+      <AddOperators :clinic-id="cabinetData.clinicUID" v-model="workers" />
     </template>
     <template #top-left>
       <span>{{ cabinetData.name }}</span>
     </template>
     <template #right>
-      <PictureCounter />
+      <PictureCounter v-model="snapshots" />
     </template>
     <template #footer>
-      <BasicButton class="w-full"> Save </BasicButton>
+      <BasicButton class="w-full" @click="saveSnapshot"> Save </BasicButton>
     </template>
   </PageLayout>
   <AdminArea v-else @close="code = ''" />
@@ -39,6 +39,15 @@ export default {
       cabinetData: {},
       clinic: {},
       code: "",
+      workers: [],
+      snapshots: [
+        { value: 0, label: "Intracranial" },
+        { value: 0, label: "2D Panoramic" },
+        { value: 0, label: "3D Sector" },
+        { value: 0, label: "3D Something/Else" },
+        { value: 0, label: "3D Another one" },
+        { value: 0, label: "SEHP something" },
+      ],
     };
   },
   computed: {
@@ -52,6 +61,15 @@ export default {
         return;
       }
       this.code = (this.code + e.key).substr(-10);
+    },
+    saveSnapshot() {
+      db.collection("snapshots").add({
+        cabinetUID: this.cabinet,
+        workersUIDs: [...this.workers],
+        pictures: [...this.snapshots],
+      });
+      this.workers = [];
+      this.snapshots = this.snapshots.map((s) => ({ ...s, value: 0 }));
     },
   },
   async mounted() {

@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="{ 'mt-1 relative': true, 'z-20': shown }"
-    @click.capture.prevent.stop
-  >
+  <div :class="{ 'mt-1 relative': true, 'z-20': shown }" @click.prevent.stop>
     <slot :show="show" :hide="hide" :toggle="toggle"></slot>
     <transition
       leave-active-class="transition-all"
