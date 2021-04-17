@@ -1,7 +1,7 @@
 <template>
   <WithLabel for-attribute="addOperators" label="Set pictures">
     <ItemCounter
-      v-for="(value, index) in value"
+      v-for="(value, index) in labeled"
       :value="value.value"
       :key="index"
       @plus="plus(index)"
@@ -19,6 +19,16 @@
 <script>
 import WithLabel from "./WithLabel";
 import ItemCounter from "./ItemCounter";
+
+const labels = {
+  pic_one: "Intracranial",
+  pic_two: "2D Panoramic",
+  pic_three: "3D Sector",
+  pic_four: "3D Something/Else",
+  pic_five: "3D Another one",
+  pic_six: "SEHP something",
+};
+
 export default {
   components: {
     WithLabel,
@@ -35,6 +45,9 @@ export default {
       return this.value.reduce((acc, cur) => {
         return acc + cur.value;
       }, 0);
+    },
+    labeled() {
+      return this.value.map((v) => ({ ...v, label: labels[v.key] }));
     },
   },
   methods: {

@@ -41,12 +41,12 @@ export default {
       code: "",
       workers: [],
       snapshots: [
-        { value: 0, label: "Intracranial" },
-        { value: 0, label: "2D Panoramic" },
-        { value: 0, label: "3D Sector" },
-        { value: 0, label: "3D Something/Else" },
-        { value: 0, label: "3D Another one" },
-        { value: 0, label: "SEHP something" },
+        { value: 0, key: "pic_one" },
+        { value: 0, key: "pic_two" },
+        { value: 0, key: "pic_three" },
+        { value: 0, key: "pic_four" },
+        { value: 0, key: "pic_five" },
+        { value: 0, key: "pic_six" },
       ],
     };
   },

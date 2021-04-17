@@ -1,5 +1,5 @@
 <template>
-  <WithLabel for-attribute="addOperators" label="Add Operators">
+  <WithLabel for-attribute="addOperators" :label="$t('label')">
     <div class="mt-1 relative rounded-md shadow-sm">
       <BasicDropdown
         :selected="value"
@@ -12,7 +12,7 @@
             name="add-operators"
             id="addOperators"
             class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-10 sm:text-sm border-gray-300 rounded-md h-9"
-            placeholder="Add operators"
+            :placeholder="$t('label')"
             v-model="search"
             @keydown.esc="hide"
             @keydown.enter="show"
@@ -104,7 +104,15 @@ export default {
       },
     },
   },
+  i18n: {
+    messages: {
+      en: {
+        label: "Add Operators",
+      },
+      ee: {
+        label: "",
+      },
+    },
+  },
 };
 </script>
-
-<style></style>
