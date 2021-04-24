@@ -15,7 +15,6 @@
       </BasicButton>
     </template>
   </PageLayout>
-  <AdminArea v-else @close="code = ''" />
 </template>
 
 <script>
@@ -23,7 +22,6 @@ import PageLayout from "@/components/PageLayout";
 import BasicButton from "@/components/basic/BasicButton";
 import AddOperators from "@/components/AddOperators";
 import PictureCounter from "@/components/PictureCounter";
-import AdminArea from "@/components/AdminArea";
 import { db } from "@/db";
 
 export default {
@@ -33,7 +31,6 @@ export default {
     BasicButton,
     AddOperators,
     PictureCounter,
-    AdminArea,
   },
   data() {
     return {
@@ -59,16 +56,18 @@ export default {
   },
   methods: {
     checkAdmin(e) {
-      if (this.showAdmin) {
-        return;
-      }
       this.code = (this.code + e.key).substr(-10);
+      if (this.code === "Shiftadmin") {
+        this.code = "";
+        this.$router.push({ name: "AdminArea" });
+      }
     },
     saveSnapshot() {
       db.collection("snapshots").add({
         cabinetUID: this.cabinet,
         workersUIDs: [...this.workers],
         pictures: [...this.snapshots],
+        timestamp: Date.now(),
       });
       this.workers = [];
       this.snapshots = this.snapshots.map((s) => ({ ...s, value: 0 }));
