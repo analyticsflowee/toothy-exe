@@ -1,5 +1,5 @@
 <template>
-  <PageLayout v-if="!showAdmin">
+  <PageLayout>
     <template #left>
       <AddOperators :clinic-id="cabinetData.clinicUID" v-model="workers" />
     </template>
@@ -7,10 +7,10 @@
       <span>{{ cabinetData.name }}</span>
     </template>
     <template #right>
-      <PictureCounter v-model="snapshots" />
+      <PictureCounter v-model="snapshots" :disabled="!workers.length" />
     </template>
     <template #footer>
-      <BasicButton class="w-full" @click="saveSnapshot">
+      <BasicButton class="w-full" @click="saveSnapshot" :disabled="!enableSave">
         {{ $t("save") }}
       </BasicButton>
     </template>
@@ -50,8 +50,8 @@ export default {
     };
   },
   computed: {
-    showAdmin() {
-      return this.code === "Shiftadmin";
+    enableSave() {
+      return this.workers.length > 0 && this.snapshots.some((s) => s.value);
     },
   },
   methods: {

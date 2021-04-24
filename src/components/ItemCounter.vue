@@ -1,7 +1,9 @@
 <template>
   <div
     :class="{
-      'flex justify-between text-indigo-600 mt-2 p-2 rounded-lg': true,
+      'flex justify-between  mt-2 p-2 rounded-lg': true,
+      'text-gray-100': disabled,
+      'text-indigo-600': !disabled,
       'bg-gray-100': value && !isTotal,
     }"
   >
@@ -15,6 +17,7 @@
     </div>
     <div class="flex items-center">
       <button
+        :disabled="disabled"
         :class="{ 'mr-1': true, 'opacity-0 pointer-events-none	': isTotal }"
         @click="$emit('minus')"
       >
@@ -30,6 +33,7 @@
       </span>
 
       <button
+        :disabled="disabled"
         :class="{ 'ml-1': true, 'opacity-0 pointer-events-none	': isTotal }"
         @click="$emit('plus')"
       >
@@ -53,6 +57,10 @@ export default {
       required: true,
     },
     isTotal: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
       type: Boolean,
       default: false,
     },

@@ -4,6 +4,7 @@
       v-for="(value, index) in labeled"
       :value="value.value"
       :key="index"
+      :disabled="disabled"
       @plus="plus(index)"
       @minus="minus(index)"
     >
@@ -40,6 +41,10 @@ export default {
     value: {
       type: Array,
       default: () => [],
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
