@@ -22,17 +22,21 @@ function cleanCmd({ cmd }) {
   return cmd.split(" ")[0];
 }
 
+let showOnNextClose = true;
 async function scanProcesses(win) {
   const list = await getProcesses();
   const toCheck = await settings.get("process");
   const find = list.find((l) => cleanCmd(l) === cleanCmd(toCheck));
 
-  if (!find) {
+  if (!find && showOnNextClose) {
     try {
       win.show();
+      showOnNextClose = false;
     } catch (e) {
       console.log(e);
     }
+  } else if (find) {
+    showOnNextClose = true;
   }
 }
 
