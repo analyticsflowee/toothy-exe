@@ -1,10 +1,14 @@
 <template>
   <PageLayout>
     <div class="flex">
-      <BasicInput name="Cabinet" placeholder="Cabinet" v-model="cabinet">
+      <BasicInput
+        name="Cabinet"
+        :placeholder="$t('SelectCabinet.placeholder')"
+        v-model="cabinet"
+      >
         <template #label> Cabinet </template>
         <template #default>
-          <BasicButton @click="save"> Save </BasicButton>
+          <BasicButton @click="save"> {{ $t("save") }} </BasicButton>
         </template>
       </BasicInput>
     </div>

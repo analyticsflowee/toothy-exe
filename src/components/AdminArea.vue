@@ -2,7 +2,7 @@
   <div class="bg-white relative shadow overflow-hidden rounded-md">
     <div class="px-4 py-5 sm:px-6 fixed w-full bg-white flex">
       <input type="text" v-model="search" />
-      <BasicButton @click="$emit('close')">Close</BasicButton>
+      <BasicButton @click="$emit('close')">{{ $t("close") }}</BasicButton>
     </div>
     <div class="px-4 py-5 sm:p-6">
       <ul class="divide-y divide-gray-200">

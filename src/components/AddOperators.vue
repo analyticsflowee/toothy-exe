@@ -1,5 +1,5 @@
 <template>
-  <WithLabel for-attribute="addOperators" :label="$t('label')">
+  <WithLabel for-attribute="addOperators" :label="$t('AddOperators.label')">
     <div class="mt-1 relative rounded-md shadow-sm">
       <BasicDropdown
         :selected="value"
@@ -12,7 +12,7 @@
             name="add-operators"
             id="addOperators"
             class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-10 sm:text-sm border-gray-300 rounded-md h-9"
-            :placeholder="$t('label')"
+            :placeholder="$t('AddOperators.label')"
             v-model="search"
             @keydown.esc="hide"
             @keydown.enter="show"
@@ -101,16 +101,6 @@ export default {
             db.collection("workers").where("clinicUID", "==", this.clinicId)
           );
         }
-      },
-    },
-  },
-  i18n: {
-    messages: {
-      en: {
-        label: "Add Operators",
-      },
-      ee: {
-        label: "",
       },
     },
   },

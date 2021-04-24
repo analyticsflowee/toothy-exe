@@ -1,5 +1,5 @@
 <template>
-  <WithLabel for-attribute="addOperators" label="Set pictures">
+  <WithLabel for-attribute="addOperators" :label="$t('PictureCounter.label')">
     <ItemCounter
       v-for="(value, index) in labeled"
       :value="value.value"
@@ -12,7 +12,9 @@
 
     <div class="w-full border-t border-1 mt-4 border-gray-300"></div>
 
-    <ItemCounter :value="total" is-total> Total </ItemCounter>
+    <ItemCounter :value="total" is-total>
+      {{ $t("PictureCounter.total") }}
+    </ItemCounter>
   </WithLabel>
 </template>
 

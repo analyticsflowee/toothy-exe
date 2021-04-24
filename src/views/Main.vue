@@ -10,7 +10,9 @@
       <PictureCounter v-model="snapshots" />
     </template>
     <template #footer>
-      <BasicButton class="w-full" @click="saveSnapshot"> Save </BasicButton>
+      <BasicButton class="w-full" @click="saveSnapshot">
+        {{ $t("save") }}
+      </BasicButton>
     </template>
   </PageLayout>
   <AdminArea v-else @close="code = ''" />
