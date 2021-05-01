@@ -15,7 +15,11 @@ export const db = firebase
 
 export const auth = firebase.auth().signInWithEmailAndPassword(email, password);
 
-// Export types that exists in Firestore
-// This is not always necessary, but it's used in other examples
+auth.then(() => {
+  setTimeout(() => {
+    firebase.auth().currentUser.getIdToken(true);
+  }, 30000);
+});
+
 const { Timestamp, GeoPoint } = firebase.firestore;
 export { Timestamp, GeoPoint };
