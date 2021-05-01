@@ -30,6 +30,7 @@ async function scanProcesses(win) {
 
   if (!find && showOnNextClose) {
     try {
+      win.webContents.send("refresh");
       win.show();
       showOnNextClose = false;
     } catch (e) {
