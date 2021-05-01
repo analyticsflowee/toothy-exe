@@ -13,7 +13,7 @@ export const db = firebase
   })
   .firestore();
 
-firebase.auth().signInWithEmailAndPassword(email, password);
+export const auth = firebase.auth().signInWithEmailAndPassword(email, password);
 
 // Export types that exists in Firestore
 // This is not always necessary, but it's used in other examples
