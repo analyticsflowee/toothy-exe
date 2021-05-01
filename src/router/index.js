@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Main from "@/views/Main.vue";
+import MainArea from "@/views/MainArea.vue";
 import SelectCabinet from "@/views/SelectCabinet.vue";
 import AdminArea from "@/views/AdminArea.vue";
 
@@ -9,8 +9,8 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Main",
-    component: Main,
+    name: "MainArea",
+    component: MainArea,
     beforeEnter: async (to, from, next) => {
       const process = await window.electronSettings.get("process");
       if (!process) {

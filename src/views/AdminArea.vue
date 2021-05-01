@@ -45,7 +45,7 @@ export default {
       window.electronSettings.set("process", process);
     },
     close() {
-      this.$router.push({ name: "Main" });
+      this.$router.push({ name: "MainArea" });
     },
   },
   async mounted() {

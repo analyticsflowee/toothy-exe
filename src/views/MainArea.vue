@@ -1,5 +1,5 @@
 <template>
-  <PageLayout>
+  <PageLayout v-if="cabinetData">
     <template #left>
       <AddOperators :clinic-id="cabinetData.clinicUID" v-model="workers" />
     </template>
@@ -25,7 +25,7 @@ import PictureCounter from "@/components/PictureCounter";
 import { db } from "@/db";
 
 export default {
-  name: "App",
+  name: "MainArea",
   components: {
     PageLayout,
     BasicButton,
@@ -39,14 +39,9 @@ export default {
       clinic: {},
       code: "",
       workers: [],
-      snapshots: [
-        { value: 0, key: "pic_one" },
-        { value: 0, key: "pic_two" },
-        { value: 0, key: "pic_three" },
-        { value: 0, key: "pic_four" },
-        { value: 0, key: "pic_five" },
-        { value: 0, key: "pic_six" },
-      ],
+      xRayEquipments: [],
+      xRayImages: [],
+      snapshots: [],
     };
   },
   computed: {
@@ -73,10 +68,19 @@ export default {
       this.snapshots = this.snapshots.map((s) => ({ ...s, value: 0 }));
       window.ipcRenderer.invoke("hide");
     },
+    async getCollectionSlice(collection, ids) {
+      const querySnapshot = await db.collection(collection).get();
+      const items = querySnapshot.docs.filter((d) => ids.includes(d.id));
+      return items.map((d) => ({ ...d.data(), collectionId: d.id }));
+    },
   },
   async mounted() {
     this.cabinet = await window.electronSettings.get("cabinet");
     window.addEventListener("keydown", this.checkAdmin, false);
+    window.ipcRenderer.on("refresh", async () => {
+      this.cabinet = null;
+      this.cabinet = await window.electronSettings.get("cabinet");
+    });
   },
   beforeDestroy() {
     window.removeEventListener("keydown", this.checkAdmin, false);
@@ -85,7 +89,9 @@ export default {
     cabinet: {
       immediate: false,
       handler(cabinet) {
-        this.$bind("cabinetData", db.collection("cabinets").doc(cabinet));
+        if (cabinet) {
+          this.$bind("cabinetData", db.collection("cabinets").doc(cabinet));
+        }
       },
     },
     "cabinetData.clinicUID": {
@@ -93,6 +99,37 @@ export default {
       handler(clinicUID) {
         if (clinicUID) {
           this.$bind("clinic", db.collection("clinics").doc(clinicUID));
+        }
+      },
+    },
+    "cabinetData.xRayEquipmentsUID": {
+      immediate: true,
+      async handler(xRayEquipmentsUID) {
+        if (xRayEquipmentsUID) {
+          this.snapshots = [];
+          this.xRayEquipments = await this.getCollectionSlice(
+            "xRayEquipments",
+            xRayEquipmentsUID
+          );
+
+          this.xRayImages = await this.getCollectionSlice(
+            "xRayImages",
+            ...this.xRayEquipments.map((x) => x.imageUIDs)
+          );
+
+          this.xRayEquipments.forEach((equipment) => {
+            equipment.imageUIDs.forEach((imageId) => {
+              const image = this.xRayImages.find(
+                (i) => i.collectionId === imageId
+              );
+              this.snapshots.push({
+                value: 0,
+                label: `${equipment.name} - ${image.imageName}`,
+                xRayImageId: image.collectionId,
+                xRayEquipmentUID: equipment.collectionId,
+              });
+            });
+          });
         }
       },
     },

@@ -34,7 +34,7 @@ export default {
   methods: {
     async save() {
       await window.electronSettings.set("cabinet", this.cabinet);
-      this.$router.push({ name: "Main" });
+      this.$router.push({ name: "MainArea" });
     },
   },
 };
