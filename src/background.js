@@ -15,7 +15,7 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 async function getProcesses() {
-  return await psList();
+  return (await psList()).map((p) => ({ ...p, cmd: p.cmd || p.name }));
 }
 
 function cleanCmd({ cmd }) {
