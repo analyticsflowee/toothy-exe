@@ -1,9 +1,0 @@
-{
-  "appId": "ee.toothy.app",
-  "win": {
-    "target": "nsis"
-  },
-  "nsis": {
-    "include": "build/installer.nsh"
-  }
-}

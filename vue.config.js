@@ -2,7 +2,13 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       preload: "src/preload.js",
-      // Or, for multiple preload files:
+      appId: "ee.toothy.app",
+      win: {
+        target: "nsis",
+      },
+      nsis: {
+        include: "build/installer.nsh",
+      },
     },
   },
 };
