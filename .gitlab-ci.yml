@@ -7,9 +7,7 @@ stages:
 build:
   image: electronuserland/builder:wine
   stage: build
-  artifacts:
-    paths:
-      - $CI_PROJECT_DIR/dist_electron/*.*
   script:
-    - sed "s/0.0.0/${VERSION_ID}/g" package.json > _package.json && mv _package.json package.json
     - yarn && yarn electron:build
+    - curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file $CI_PROJECT_DIR/dist_electron/*.exe ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/toothy-tron/${VERSION_ID}/toothy-tron-setup.exe
+
