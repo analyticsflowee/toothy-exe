@@ -3,7 +3,7 @@ import VueI18n from "vue-i18n";
 
 Vue.use(VueI18n);
 export const i18n = new VueI18n({
-  locale: "en",
+  locale: "ee",
   messages: {
     en: {
       AddOperators: {
@@ -21,8 +21,17 @@ export const i18n = new VueI18n({
     },
     ee: {
       AddOperators: {
-        label: "Add Operators",
+        label: "Lisa isik",
       },
+      SelectCabinet: {
+        placeholder: "Kabinet",
+      },
+      PictureCounter: {
+        label: "Vali pilt",
+        total: "Pilte kokku",
+      },
+      save: "Salvesta",
+      close: "Sulge",
     },
   },
 });
