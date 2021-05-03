@@ -74,7 +74,7 @@ export default {
   },
   computed: {
     searchData() {
-      return this.workers.map((w) => ({ key: w.clinicUID, label: w.name }));
+      return this.workers.map((w) => ({ key: w.collectionId, label: w.name }));
     },
     parsedSelected() {
       return this.searchData.filter((o) => this.value.includes(o.key));
@@ -94,12 +94,17 @@ export default {
   watch: {
     clinicId: {
       immediate: true,
-      handler(clinicId) {
+      async handler(clinicId) {
         if (clinicId) {
-          this.$bind(
-            "workers",
-            db.collection("workers").where("clinicUID", "==", this.clinicId)
-          );
+          const querySnapshot = await db
+            .collection("workers")
+            .where("clinicUID", "==", clinicId)
+            .get();
+
+          this.workers = querySnapshot.docs.map((d) => ({
+            ...d.data(),
+            collectionId: d.id,
+          }));
         }
       },
     },
