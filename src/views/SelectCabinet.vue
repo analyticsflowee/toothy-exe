@@ -4,7 +4,7 @@
       <BasicInput
         name="Cabinet"
         :placeholder="$t('SelectCabinet.placeholder')"
-        v-model="cabinet"
+        v-model.trim="cabinet"
       >
         <template #label> Cabinet </template>
         <template #default>

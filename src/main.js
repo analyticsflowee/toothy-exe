@@ -1,19 +1,20 @@
 import Vue from "vue";
 import { firestorePlugin } from "vuefire";
+import Toasted from "vue-toasted";
 import App from "./App.vue";
 import "./assets/tailwind.css";
 import router from "./router";
 import { i18n } from "./i18n";
-import { auth } from "./db";
 
 Vue.config.productionTip = false;
 
 Vue.use(firestorePlugin);
-
-auth.then(() => {
-  new Vue({
-    router,
-    i18n,
-    render: (h) => h(App),
-  }).$mount("#app");
+Vue.use(Toasted, {
+  duration: 5000,
 });
+
+new Vue({
+  router,
+  i18n,
+  render: (h) => h(App),
+}).$mount("#app");

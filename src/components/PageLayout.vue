@@ -23,9 +23,7 @@
             v-if="$scopedSlots.default"
             class="flex justify-center items-center h-full"
           >
-            <div>
-              <slot />
-            </div>
+            <slot />
           </div>
           <div class="h-full flex flex-col" v-else>
             <div class="grid grid-cols-6 mb-4">
