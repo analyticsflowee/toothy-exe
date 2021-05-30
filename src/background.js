@@ -1,6 +1,14 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, ipcMain } from "electron";
+import {
+  app,
+  protocol,
+  BrowserWindow,
+  ipcMain,
+  Tray,
+  Menu,
+  nativeImage,
+} from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import psList from "ps-list";
@@ -8,6 +16,9 @@ import path from "path";
 import settings from "electron-settings";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
+let tray;
+let isQuiting;
+let window;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -18,7 +29,8 @@ async function getProcesses() {
   return (await psList()).map((p) => ({ ...p, cmd: p.cmd || p.name }));
 }
 
-function cleanCmd({ cmd }) {
+function cleanCmd(process) {
+  const cmd = (process && process.cmd) || "";
   return cmd.split(" ")[0];
 }
 
@@ -43,9 +55,10 @@ async function scanProcesses(win) {
 
 async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  window = new BrowserWindow({
     width: 1280,
     height: 1280,
+    skipTaskbar: true,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -57,18 +70,19 @@ async function createWindow() {
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-    if (!process.env.IS_TEST) win.webContents.openDevTools();
+    await window.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
+    if (!process.env.IS_TEST) window.webContents.openDevTools();
   } else {
     createProtocol("app");
     // Load the index.html when not in development
-    win.loadURL("app://./index.html");
+    window.loadURL("app://./index.html");
   }
-
-  return win;
 }
 
-// Quit when all windows are closed.
+app.on("before-quit", function () {
+  isQuiting = true;
+});
+
 app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
@@ -95,13 +109,52 @@ app.on("ready", async () => {
       console.error("Vue Devtools failed to install:", e.toString());
     }
   }
+  const iconPath = nativeImage.createFromPath("build/icon-tray.png");
 
-  const win = await createWindow();
-  setInterval(() => scanProcesses(win), 2000);
+  tray = new Tray(iconPath);
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "Show App",
+      click: function () {
+        window.show();
+      },
+    },
+    {
+      label: "Quit",
+      click: function () {
+        isQuiting = true;
+        app.quit();
+      },
+    },
+  ]);
+
+  tray.setContextMenu(contextMenu);
+
+  await createWindow();
+
+  window.on("close", (event) => {
+    if (!isQuiting) {
+      event.preventDefault();
+      window.hide();
+      event.returnValue = false;
+    }
+  });
+
+  window.on("minimize", (event) => {
+    event.preventDefault();
+    window.hide();
+    event.returnValue = false;
+  });
+
+  if (app.dock) {
+    app.dock.hide();
+  }
+
+  setInterval(() => scanProcesses(window), 2000);
 
   ipcMain.handle("get-processes", getProcesses);
   ipcMain.handle("hide", () => {
-    return win.minimize();
+    return window.hide();
   });
 });
 

@@ -32,6 +32,7 @@
     "vue": "^2.6.11",
     "vue-i18n": "^8.24.3",
     "vue-router": "^3.2.0",
+    "vue-toasted": "^1.1.28",
     "vuefire": "^2.2.5"
   },
   "devDependencies": {
@@ -49,6 +50,7 @@
     "prettier": "^2.2.1",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.6",
     "vue-cli-plugin-tailwind": "~2.0.6",
-    "vue-template-compiler": "^2.6.11"
+    "vue-svg-loader": "^0.16.0",
+    "vue-template-compiler": "^2.6.12"
   }
 }

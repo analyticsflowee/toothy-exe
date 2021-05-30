@@ -15,10 +15,12 @@ const routes = [
       const process = await window.electronSettings.get("process");
       if (!process) {
         next({ name: "AdminArea" });
+        return;
       }
       const cabinet = await window.electronSettings.get("cabinet");
       if (!cabinet) {
         next({ name: "SelectCabinet" });
+        return;
       }
       next();
     },

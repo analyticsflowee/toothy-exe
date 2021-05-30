@@ -1,15 +1,15 @@
 <template>
-  <div class="bg-white relative shadow overflow-hidden rounded-md">
-    <div class="px-4 py-5 sm:px-6 fixed w-full bg-white flex">
+  <div class="bg-white relative shadow overflow-hidden rounded-md h-screen">
+    <div class="px-4 py-5 sm:px-6 fixed w-full bg-white flex justify-between">
       <input type="text" v-model="search" />
-      <BasicButton @click="close">{{ $t("close") }}</BasicButton>
+      <BasicButton @click="refresh">{{ $t("refresh") }}</BasicButton>
     </div>
-    <div class="px-4 py-5 sm:p-6">
+    <div class="px-4 mt-10 sm:p-6">
       <ul class="divide-y divide-gray-200">
         <li
           :class="{
-            'px-6 py-4': true,
-            'bg-indigo-600': process.pid === selected.pid,
+            'px-6 py-4 cursor-pointer	': true,
+            'bg-indigo-600 text-white': process.pid === selected.pid,
           }"
           v-for="process in filteredProcesses"
           :key="process.pid"
@@ -40,12 +40,15 @@ export default {
     },
   },
   methods: {
-    setProcess(process) {
+    async setProcess(process) {
       this.selected = process;
       window.electronSettings.set("process", process);
-    },
-    close() {
+      this.$toasted.success(this.$t("AdminArea.processSelected"));
+      await this.$nextTick();
       this.$router.push({ name: "MainArea" });
+    },
+    async refresh() {
+      this.processes = await window.ipcRenderer.invoke("get-processes");
     },
   },
   async mounted() {

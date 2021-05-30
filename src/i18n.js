@@ -16,8 +16,15 @@ export const i18n = new VueI18n({
         label: "Set pictures",
         total: "Total",
       },
+      AdminArea: {
+        processSelected: "Process correctly selected",
+      },
       save: "Save",
       close: "Close",
+      networkError:
+        "An error occurred while contacting the server, please try to re-open the application",
+      loading: "Loading...",
+      refresh: "Refresh",
     },
     ee: {
       AddOperators: {
@@ -30,8 +37,15 @@ export const i18n = new VueI18n({
         label: "Vali pilt",
         total: "Pilte kokku",
       },
+      AdminArea: {
+        processSelected: "Process correctly selected",
+      },
       save: "Salvesta",
       close: "Sulge",
+      networkError:
+        "An error occurred while contacting the server, please try to re-open the application",
+      loading: "Loading...",
+      refresh: "Refresh",
     },
   },
 });
