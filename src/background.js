@@ -59,9 +59,8 @@ async function createWindow() {
     width: 1280,
     height: 1280,
     skipTaskbar: true,
+    alwaysOnTop: true,
     webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       preload: path.join(__dirname, "preload.js"),
       enableRemoteModule: true,
@@ -132,6 +131,8 @@ app.on("ready", async () => {
 
   await createWindow();
 
+  window.hide();
+
   window.on("close", (event) => {
     if (!isQuiting) {
       event.preventDefault();
@@ -144,6 +145,12 @@ app.on("ready", async () => {
     event.preventDefault();
     window.hide();
     event.returnValue = false;
+  });
+
+  window.on("show", () => {
+    setTimeout(() => {
+      window.focus();
+    }, 200);
   });
 
   if (app.dock) {
