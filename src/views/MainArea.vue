@@ -1,5 +1,5 @@
 <template>
-  <PageLayout v-if="cabinetData">
+  <PageLayout v-if="!loadingState.loading">
     <template #left>
       <AddOperators :clinic-id="cabinetData.clinicUID" v-model="workers" />
     </template>
@@ -26,6 +26,7 @@ import { db } from "@/db";
 
 export default {
   name: "MainArea",
+  inject: ["loadingState"],
   components: {
     PageLayout,
     BasicButton,
@@ -106,6 +107,7 @@ export default {
       immediate: true,
       async handler(xRayEquipmentsUID) {
         if (xRayEquipmentsUID) {
+          this.loadingState.setLoading(true);
           this.snapshots = [];
           this.xRayEquipments = await this.getCollectionSlice(
             "xRayEquipments",
@@ -130,6 +132,8 @@ export default {
               });
             });
           });
+
+          this.loadingState.setLoading(false);
         }
       },
     },
