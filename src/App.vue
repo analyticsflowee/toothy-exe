@@ -1,40 +1,49 @@
 <template>
-  <router-view v-if="showMainApp" />
-  <PageLayout v-else>
-    <div class="flex flex-col justify-center items-center w-full h-full">
-      <LoadingSvg class="w-96 h-96" />
-      <p class="text-xl font-extrabold">
-        <span v-if="error">{{ error }}</span>
-        <span v-else>{{ $t("loading") }}</span>
-      </p>
+  <div>
+    <router-view />
+    <div v-if="loading" class="absolute w-screen h-screen bg-white z-10">
+      <div class="flex flex-col justify-center items-center w-full h-full">
+        <LoadingSvg class="w-96 h-96" />
+        <p class="text-xl font-extrabold">
+          <span v-if="error">{{ error }}</span>
+          <span v-else>{{ $t("loading") }}</span>
+        </p>
+      </div>
     </div>
-  </PageLayout>
+  </div>
 </template>
 
 <script>
-import PageLayout from "@/components/PageLayout";
+import Vue from "vue";
 import LoadingSvg from "@/assets/svg/loading.svg";
 import { auth } from "./db";
 
+const loadingState = Vue.observable({
+  loading: false,
+  setLoading(value) {
+    this.loading = value;
+  },
+});
+
 export default {
   components: {
-    PageLayout,
     LoadingSvg,
   },
+  provide: { loadingState },
   data() {
     return {
-      loading: true,
       error: false,
     };
   },
   computed: {
-    showMainApp() {
-      return (!this.loading && !this.error) || true;
+    loading() {
+      return loadingState.loading;
     },
   },
   async created() {
+    loadingState.setLoading(true);
     await auth;
-    this.loading = false;
+    loadingState.setLoading(false);
   },
   mounted() {
     window.addEventListener("error", (e) => {
