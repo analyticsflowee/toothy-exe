@@ -4,6 +4,7 @@
       <BasicDropdown
         :selected="value"
         :options="searchData"
+        :search="search"
         @select="toggleSelected"
       >
         <template #default="{ show, hide }">
@@ -20,7 +21,7 @@
           />
           <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
             <button @click="show">
-              <SearchIcon class="text-gray-400" />
+              <SearchIcon class="text-gray-400"/>
             </button>
           </div>
         </template>
@@ -30,13 +31,13 @@
       <li
         v-for="operator in parsedSelected"
         :key="operator.key"
-        class="bg-white shadow overflow-hidden rounded-md px-3 inline-flex w-full justify-between items-center h-9"
+        class="bg-white overflow-hidden rounded-md px-3 inline-flex w-full justify-between items-center"
       >
         <span>
           {{ operator.label }}
         </span>
         <button @click="toggleSelected(operator)">
-          <CrossIcon class="text-gray-400" />
+          <CrossIcon class="text-gray-400"/>
         </button>
       </li>
     </ul>
@@ -44,10 +45,10 @@
 </template>
 
 <script>
-import { SearchIcon, CrossIcon } from "./icons";
+import {SearchIcon, CrossIcon} from "./icons";
 import BasicDropdown from "./basic/BasicDropdown";
 import WithLabel from "./WithLabel";
-import { db } from "@/db";
+import {db} from "@/db";
 
 export default {
   components: {
@@ -74,14 +75,14 @@ export default {
   },
   computed: {
     searchData() {
-      return this.workers.map((w) => ({ key: w.collectionId, label: w.name }));
+      return this.workers.map((w) => ({key: w.collectionId, label: w.name}));
     },
     parsedSelected() {
       return this.searchData.filter((o) => this.value.includes(o.key));
     },
   },
   methods: {
-    toggleSelected({ key }) {
+    toggleSelected({key}) {
       let selected = [...this.value];
       if (selected.includes(key)) {
         selected = selected.filter((k) => k !== key);

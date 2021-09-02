@@ -34,18 +34,19 @@ export const i18n = new VueI18n({
         placeholder: "Kabinet",
       },
       PictureCounter: {
-        label: "Vali pilt",
+        label: "Lisa pilt",
         total: "Pilte kokku",
       },
       AdminArea: {
-        processSelected: "Process correctly selected",
+        processSelected: "Programm valitud",
       },
       save: "Salvesta",
+      addImages: "Lisa pildid",
       close: "Sulge",
       networkError:
         "An error occurred while contacting the server, please try to re-open the application",
-      loading: "Loading...",
-      refresh: "Refresh",
+      loading: "Laen",
+      refresh: "Lae uuesti",
     },
   },
 });

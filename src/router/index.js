@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import MainArea from "@/views/MainArea.vue";
 import SelectCabinet from "@/views/SelectCabinet.vue";
 import AdminArea from "@/views/AdminArea.vue";
+import NoConnection from "@/views/NoConnection";
 
 Vue.use(VueRouter);
 
@@ -34,6 +35,11 @@ const routes = [
     path: "/admin-area",
     name: "AdminArea",
     component: AdminArea,
+  },
+  {
+    path: "/no-connection",
+    name: "NoConnection",
+    component: NoConnection,
   },
 ];
 

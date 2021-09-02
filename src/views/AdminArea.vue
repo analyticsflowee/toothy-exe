@@ -13,45 +13,75 @@
           }"
           v-for="process in filteredProcesses"
           :key="process.pid"
-          @click="setProcess(process)"
+          @click="onSelect(process)"
         >
-          {{ process.cmd }}
+          {{ process.cmd }} - <span class="font-bold">{{ process.name }}</span>
         </li>
       </ul>
     </div>
+    <AreYouSureProcessModal
+      v-if="selectingProccessModal"
+      :process="tempProcess"
+      @onSelect="setProcess"
+    />
   </div>
 </template>
 
 <script>
 import BasicButton from "@/components/basic/BasicButton";
-
+import AreYouSureProcessModal from "@/components/modal/AreYouSureProcessModal";
 export default {
-  components: { BasicButton },
+  components: { AreYouSureProcessModal, BasicButton },
   data() {
     return {
       processes: [],
       search: "",
       selected: {},
+      newProcesses: [],
+      selectingProccessModal: false,
+      tempProcess: undefined,
     };
   },
   computed: {
     filteredProcesses() {
-      return this.processes.filter((p) => p.cmd.includes(this.search));
+      return this.newProcesses.filter(
+        (p) =>
+          p.cmd.toLowerCase().includes(this.search.toLowerCase()) ||
+          p.name.toLowerCase().includes(this.search.toLowerCase())
+      );
     },
   },
   methods: {
-    async setProcess(process) {
-      this.selected = process;
-      window.electronSettings.set("process", process);
-      this.$toasted.success(this.$t("AdminArea.processSelected"));
-      await this.$nextTick();
-      this.$router.push({ name: "MainArea" });
+    onSelect(process) {
+      this.tempProcess = process;
+      this.selectingProccessModal = true;
+    },
+    async setProcess(iAmSure) {
+      this.selectingProccessModal = false;
+      if (iAmSure) {
+        this.selected = this.tempProcess;
+        await window.electronSettings.set("process", this.tempProcess);
+        this.$toasted.success(this.$t("AdminArea.processSelected"));
+        this.$nextTick(() =>
+          this.$router.push({ name: "MainArea" }).catch(() => undefined)
+        );
+      }
+
+      this.tempProcess = undefined;
     },
     async refresh() {
       this.processes = await window.ipcRenderer.invoke("get-processes");
     },
   },
+  watch: {
+    processes(newP, oldP) {
+      this.newProcesses = newP.filter(
+        (np) => !oldP.find((op) => op.cmd === np.cmd)
+      );
+    },
+  },
   async mounted() {
+
     this.processes = await window.ipcRenderer.invoke("get-processes");
     this.selected = (await window.electronSettings.get("process")) || {};
   },

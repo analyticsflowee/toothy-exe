@@ -3,11 +3,17 @@ module.exports = {
     electronBuilder: {
       preload: "src/preload.js",
       appId: "ee.toothy.app",
-      win: {
-        target: "nsis",
-      },
-      nsis: {
-        include: "build/installer.nsh",
+      builderOptions: {
+        win: {
+          target: "nsis",
+          // requestedExecutionLevel: "highestAvailable",
+        },
+        nsis: {
+          guid: "3e32c88f-fd54-4a7c-ae39-3abfcd273234",
+          include: "build/installer.nsh",
+          perMachine: true,
+          oneClick: false,
+        },
       },
     },
   },

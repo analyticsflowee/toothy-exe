@@ -1,5 +1,9 @@
 <template>
-  <PageLayout v-if="!loadingState.loading">
+  <PageLayout
+    v-if="!loadingState.loading"
+    :cabinet-data="cabinetData"
+    :clinic="clinic"
+  >
     <template #left>
       <AddOperators :clinic-id="cabinetData.clinicUID" v-model="workers" />
     </template>
@@ -10,16 +14,45 @@
       <PictureCounter v-model="snapshots" :disabled="!workers.length" />
     </template>
     <template #footer>
-      <BasicButton class="w-full" @click="saveSnapshot" :disabled="!enableSave">
-        {{ $t("save") }}
-      </BasicButton>
+      <div class="w-full flex justify-around">
+        <!--        <BasicButton class="w-1/2" @click="saveSnapshot" :disabled="!enableSave">-->
+        <!--          {{ $t("addImages") }}-->
+        <!--        </BasicButton>-->
+
+        <button
+          v-if="enableSave"
+          class="w-1/2 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          @click="saveSnapshot"
+        >
+          {{ $t("addImages") }}
+        </button>
+        <div class="rounded-md bg-yellow-50 p-4 w-1/2" v-else>
+          <div class="flex">
+            <div class="ml-3">
+              <h3 class="text-md font-medium text-yellow-800">
+                Piltide edukaks lisamiseks
+              </h3>
+              <div class="mt-2 text-md text-yellow-700">
+                <ul class="list-disc pl-5 space-y-1">
+                  <li v-if="!isWorkersSelected">
+                    Lisa isik või isikud kes olid pildi tegemise hetkel
+                    kabinetis
+                  </li>
+                  <li v-if="!isImagesAdded">
+                    Lisa kogus piltidele mis tehti kabinetis
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </template>
   </PageLayout>
 </template>
 
 <script>
 import PageLayout from "@/components/PageLayout";
-import BasicButton from "@/components/basic/BasicButton";
 import AddOperators from "@/components/AddOperators";
 import PictureCounter from "@/components/PictureCounter";
 import { db } from "@/db";
@@ -29,7 +62,6 @@ export default {
   inject: ["loadingState"],
   components: {
     PageLayout,
-    BasicButton,
     AddOperators,
     PictureCounter,
   },
@@ -47,7 +79,13 @@ export default {
   },
   computed: {
     enableSave() {
-      return this.workers.length > 0 && this.snapshots.some((s) => s.value);
+      return this.isWorkersSelected && this.isImagesAdded;
+    },
+    isWorkersSelected() {
+      return this.workers.length > 0;
+    },
+    isImagesAdded() {
+      return this.snapshots.some((s) => s.value);
     },
   },
   methods: {
@@ -76,6 +114,7 @@ export default {
     },
   },
   async mounted() {
+
     this.cabinet = await window.electronSettings.get("cabinet");
     window.addEventListener("keydown", this.checkAdmin, false);
     window.ipcRenderer.on("refresh", async () => {
@@ -113,11 +152,9 @@ export default {
             "xRayEquipments",
             xRayEquipmentsUID
           );
-
-          this.xRayImages = await this.getCollectionSlice(
-            "xRayImages",
-            ...this.xRayEquipments.map((x) => x.imageUIDs)
-          );
+          this.xRayImages = await this.getCollectionSlice("xRayImages", [
+            ...this.xRayEquipments.flatMap((x) => x.imageUIDs),
+          ]);
 
           this.xRayEquipments.forEach((equipment) => {
             equipment.imageUIDs.forEach((imageId) => {

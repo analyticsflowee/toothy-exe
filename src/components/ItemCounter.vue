@@ -2,7 +2,7 @@
   <div
     :class="{
       'flex justify-between  mt-2 p-2 rounded-lg': true,
-      'text-gray-100': disabled,
+      'text-gray-400': disabled,
       'text-indigo-600': !disabled,
       'bg-gray-100': value && !isTotal,
     }"
@@ -26,7 +26,7 @@
       <span
         :class="{
           'w-7 text-center text-lg text-black': true,
-          'text-gray-400': !value,
+          'text-gray-400': !value || disabled,
         }"
       >
         {{ value }}

@@ -6,11 +6,20 @@
       ></nav>
       <header class="py-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 class="text-3xl font-bold text-white">
-            Toothy Tron
-            <span class="cursor-pointer" v-if="cabinet" @click="removeCabinet"
-              >({{ cabinet }})
-            </span>
+          <h1 class="text-3xl font-bold text-white" v-if="clinic">
+            {{ clinic.name }}
+            <div
+              class="cursor-pointer mt-4"
+              v-if="cabinet"
+              @click="removeCabinet"
+            >
+              <div class="text-2xl leading-6 font-medium text-white">
+                {{ cabinetData.name }}
+                <span class="text-xs text-white">
+                  {{ cabinet }}
+                </span>
+              </div>
+            </div>
           </h1>
         </div>
       </header>
@@ -27,7 +36,7 @@
           </div>
           <div class="h-full flex flex-col" v-else>
             <div class="grid grid-cols-6 mb-4">
-              <slot name="top-left"> </slot>
+              <slot name="top-left"></slot>
             </div>
             <div class="grid grid-cols-6 grid-rows-3 flex-1">
               <div class="col-span-2 row-span-3">
@@ -49,6 +58,7 @@
 
 <script>
 export default {
+  props: ["cabinetData", "clinic"],
   data() {
     return {
       cabinet: null,
@@ -60,7 +70,7 @@ export default {
   methods: {
     async removeCabinet() {
       await window.electronSettings.set("cabinet", null);
-      this.$router.push({ name: "SelectCabinet" });
+      await this.$router.push({ name: "SelectCabinet" });
     },
   },
 };

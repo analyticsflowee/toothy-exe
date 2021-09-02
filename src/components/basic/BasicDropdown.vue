@@ -45,8 +45,11 @@
               'text-indigo-600': !option.highlighted,
             }"
           >
-            <CheckIcon />
+            <CheckIcon/>
           </span>
+        </li>
+        <li v-if="!parsedOptions.length" class="cursor-default select-none relative py-2 pl-8 pr-4 text-gray-900'">
+          <span class="block truncate font-normal">Tulemused puuduvad...</span>
         </li>
       </ul>
     </transition>
@@ -54,7 +57,8 @@
 </template>
 
 <script>
-import { CheckIcon } from "../icons";
+import {CheckIcon} from "../icons";
+
 export default {
   components: {
     CheckIcon,
@@ -68,6 +72,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    search: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
@@ -77,11 +85,15 @@ export default {
   },
   computed: {
     parsedOptions() {
-      return this.options.map((o) => ({
-        ...o,
-        selected: this.selected.includes(o.key),
-        highlighted: this.highlighted === o.key,
-      }));
+      return this.options
+        .filter((o) =>
+          o.label.toLowerCase().includes(this.$props.search.toLowerCase())
+        )
+        .map((o) => ({
+          ...o,
+          selected: this.selected.includes(o.key),
+          highlighted: this.highlighted === o.key,
+        }));
     },
   },
   mounted() {
@@ -94,10 +106,10 @@ export default {
     select(option) {
       this.$emit("select", option);
     },
-    highlight({ key }) {
+    highlight({key}) {
       this.highlighted = key;
     },
-    downlight({ key }) {
+    downlight({key}) {
       if (this.highlighted === key) {
         this.highlighted = null;
       }

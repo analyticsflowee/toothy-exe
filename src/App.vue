@@ -5,8 +5,7 @@
       <div class="flex flex-col justify-center items-center w-full h-full">
         <LoadingSvg class="w-96 h-96" />
         <p class="text-xl font-extrabold">
-          <span v-if="error">{{ error }}</span>
-          <span v-else>{{ $t("loading") }}</span>
+          <span>{{ $t("loading") }}</span>
         </p>
       </div>
     </div>
@@ -40,17 +39,29 @@ export default {
       return loadingState.loading;
     },
   },
+  methods: {
+    updateOnlineStatus() {
+      if (!navigator.onLine) this.$router.push({ name: "NoConnection" });
+      else {
+        if (this.$route.name === "NoConnection")
+          this.$router.push({ name: "MainArea" });
+      }
+    },
+  },
   async created() {
+    // const machineID = await window.electronSettings.get('machineID')
     loadingState.setLoading(true);
     await auth;
     loadingState.setLoading(false);
   },
   mounted() {
-    window.addEventListener("error", (e) => {
-      this.error = e.message;
-      console.log(e);
-      this.$toasted.error(this.$t("networkError"));
-    });
+    this.updateOnlineStatus();
+    window.addEventListener("online", this.updateOnlineStatus);
+    window.addEventListener("offline", this.updateOnlineStatus);
+  },
+  beforeDestroy() {
+    window.removeEventListener("online", this.updateOnlineStatus);
+    window.removeEventListener("offline", this.updateOnlineStatus);
   },
 };
 </script>

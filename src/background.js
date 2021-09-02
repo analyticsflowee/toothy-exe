@@ -9,11 +9,12 @@ import {
   Menu,
   nativeImage,
 } from "electron";
-import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
-import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
+import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
+import installExtension, {VUEJS_DEVTOOLS} from "electron-devtools-installer";
 import psList from "ps-list";
 import path from "path";
 import settings from "electron-settings";
+import {machineIdSync} from "node-machine-id";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 let tray;
@@ -22,11 +23,11 @@ let window;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } },
+  {scheme: "app", privileges: {secure: true, standard: true}},
 ]);
 
 async function getProcesses() {
-  return (await psList()).map((p) => ({ ...p, cmd: p.cmd || p.name }));
+  return (await psList()).map((p) => ({...p, cmd: p.cmd || p.name}));
 }
 
 function cleanCmd(process) {
@@ -35,6 +36,7 @@ function cleanCmd(process) {
 }
 
 let showOnNextClose = true;
+
 async function scanProcesses(win) {
   const list = await getProcesses();
   const toCheck = await settings.get("process");
@@ -93,13 +95,20 @@ app.on("window-all-closed", () => {
 app.on("activate", async () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  if (BrowserWindow.getAllWindows().length === 0) await createWindow();
 });
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
+  // 875d9763352ee75c1190be9fa3781a866a5c9b830b3554c5a3e6cae33e8ccab8
+  // 875d9763352ee75c1190be9fa3781a866a5c9b830b3554c5a3e6cae33e8ccab8
+  // c9dfd4b6953544889320b26b6e8b7602
+
+  // await settings.set('machineID', machineIdSync(true))
+  // console.log(machineIdSync(true));
+
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
