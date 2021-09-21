@@ -49,7 +49,6 @@ export default {
     },
   },
   async created() {
-    // const machineID = await window.electronSettings.get('machineID')
     loadingState.setLoading(true);
     await auth;
     loadingState.setLoading(false);

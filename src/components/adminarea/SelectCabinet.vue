@@ -43,6 +43,7 @@ export default {
     BasicInput,
     BasicButton,
   },
+  emits: ["onCabinet"],
   data() {
     return {
       cabinet: null,
@@ -110,12 +111,14 @@ export default {
     async setCabinet(iAmSure) {
       this.selectingCabinetModal = false;
       if (iAmSure) {
-        await window.electronSettings.set(
-          "cabinet",
-          this.tempCabinet.cabinetUID
-        );
-        await this.$router.push({ name: "MainArea" });
-        await window.ipcRenderer.invoke("hide");
+        this.$emit("onCabinet", this.tempCabinet.cabinetUID);
+        // TODO: cleanup
+        // await window.electronSettings.set(
+        //   "cabinet",
+        //   this.tempCabinet.cabinetUID
+        // );
+        // await this.$router.push({ name: "MainArea" });
+        // await window.ipcRenderer.invoke("hide");
       }
       this.tempCabinet = undefined;
     },

@@ -9,9 +9,8 @@
           <h1 class="text-3xl font-bold text-white" v-if="clinic">
             {{ clinic.name }}
             <div
-              class="cursor-pointer mt-4"
-              v-if="cabinet"
-              @click="removeCabinet"
+              class="mt-4"
+              v-if="cabinet && cabinetData"
             >
               <div class="text-2xl leading-6 font-medium text-white">
                 {{ cabinetData.name }}
@@ -66,12 +65,6 @@ export default {
   },
   async mounted() {
     this.cabinet = await window.electronSettings.get("cabinet");
-  },
-  methods: {
-    async removeCabinet() {
-      await window.electronSettings.set("cabinet", null);
-      await this.$router.push({ name: "SelectCabinet" });
-    },
-  },
+  }
 };
 </script>

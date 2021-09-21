@@ -15,10 +15,6 @@
     </template>
     <template #footer>
       <div class="w-full flex justify-around">
-        <!--        <BasicButton class="w-1/2" @click="saveSnapshot" :disabled="!enableSave">-->
-        <!--          {{ $t("addImages") }}-->
-        <!--        </BasicButton>-->
-
         <button
           v-if="enableSave"
           class="w-1/2 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -114,7 +110,6 @@ export default {
     },
   },
   async mounted() {
-
     this.cabinet = await window.electronSettings.get("cabinet");
     window.addEventListener("keydown", this.checkAdmin, false);
     window.ipcRenderer.on("refresh", async () => {
@@ -163,7 +158,7 @@ export default {
               );
               this.snapshots.push({
                 value: 0,
-                label: `${equipment.name} - ${image.imageName}`,
+                label: image.imageName,
                 xRayImageId: image.collectionId,
                 xRayEquipmentUID: equipment.collectionId,
               });

@@ -9,12 +9,11 @@ import {
   Menu,
   nativeImage,
 } from "electron";
-import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
-import installExtension, {VUEJS_DEVTOOLS} from "electron-devtools-installer";
+import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
+import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import psList from "ps-list";
 import path from "path";
 import settings from "electron-settings";
-import {machineIdSync} from "node-machine-id";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 let tray;
@@ -23,11 +22,11 @@ let window;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  {scheme: "app", privileges: {secure: true, standard: true}},
+  { scheme: "app", privileges: { secure: true, standard: true } },
 ]);
 
 async function getProcesses() {
-  return (await psList()).map((p) => ({...p, cmd: p.cmd || p.name}));
+  return (await psList()).map((p) => ({ ...p, cmd: p.cmd || p.name }));
 }
 
 function cleanCmd(process) {
@@ -35,23 +34,27 @@ function cleanCmd(process) {
   return cmd.split(" ")[0];
 }
 
-let showOnNextClose = true;
+let showOnNextClose = false;
 
 async function scanProcesses(win) {
-  const list = await getProcesses();
-  const toCheck = await settings.get("process");
-  const find = list.find((l) => cleanCmd(l) === cleanCmd(toCheck));
+  try {
+    const list = await getProcesses();
+    const toCheck = await settings.get("process");
+    const find = list.find((l) => cleanCmd(l) === cleanCmd(toCheck));
 
-  if (!find && showOnNextClose) {
-    try {
-      win.webContents.send("refresh");
-      win.show();
-      showOnNextClose = false;
-    } catch (e) {
-      console.log(e);
+    if (!find && showOnNextClose) {
+      try {
+        win.webContents.send("refresh");
+        win.show();
+        showOnNextClose = false;
+      } catch (e) {
+        console.log(e);
+      }
+    } else if (find) {
+      showOnNextClose = true;
     }
-  } else if (find) {
-    showOnNextClose = true;
+  } catch (e) {
+    
   }
 }
 
@@ -66,6 +69,8 @@ async function createWindow() {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       preload: path.join(__dirname, "preload.js"),
       enableRemoteModule: true,
+      // TODO: false when production
+      devTools: true
     },
   });
 
@@ -102,12 +107,9 @@ app.on("activate", async () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
-  // 875d9763352ee75c1190be9fa3781a866a5c9b830b3554c5a3e6cae33e8ccab8
-  // 875d9763352ee75c1190be9fa3781a866a5c9b830b3554c5a3e6cae33e8ccab8
-  // c9dfd4b6953544889320b26b6e8b7602
-
-  // await settings.set('machineID', machineIdSync(true))
-  // console.log(machineIdSync(true));
+  settings.configure({
+    dir: `${__dirname.split("toothy-tron")[0]}/toothy-tron`,
+  });
 
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
@@ -166,12 +168,20 @@ app.on("ready", async () => {
     app.dock.hide();
   }
 
+
+
   setInterval(() => scanProcesses(window), 2000);
 
   ipcMain.handle("get-processes", getProcesses);
   ipcMain.handle("hide", () => {
     return window.hide();
   });
+
+  try {
+    await settings.get("process");
+  } catch (e) {
+    window.show();
+  }
 });
 
 // Exit cleanly on request from parent process in development mode.
