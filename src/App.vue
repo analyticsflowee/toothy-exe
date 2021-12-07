@@ -1,6 +1,6 @@
 <template>
   <div>
-    2
+    3
     <router-view />
     <div v-if="loading" class="absolute w-screen h-screen bg-white z-10">
       <div class="flex flex-col justify-center items-center w-full h-full">

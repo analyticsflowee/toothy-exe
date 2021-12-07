@@ -1,11 +1,11 @@
 {
   "name": "toothy-tron",
   "description": "An app to save toothy pics",
-  "version": "0.1.92",
+  "version": "0.1.93",
   "private": true,
   "repository": {
     "type" : "git",
-    "url" : "https://github.com/analyticsflowee/toothy-tron"
+    "url" : "https://github.com/analyticsflowee/toothy-exe"
   },
   "author": {
     "name": "Analytics Flow",
