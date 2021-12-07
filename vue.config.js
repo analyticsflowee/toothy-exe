@@ -4,6 +4,7 @@ module.exports = {
       preload: "src/preload.js",
       appId: "ee.toothy.app",
       builderOptions: {
+        publish: ["github"],
         win: {
           target: "nsis",
           // requestedExecutionLevel: "highestAvailable",

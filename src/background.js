@@ -14,7 +14,7 @@ import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import psList from "ps-list";
 import path from "path";
 import settings from "electron-settings";
-
+import { autoUpdater } from "electron-updater"
 const isDevelopment = process.env.NODE_ENV !== "production";
 let tray;
 let isQuiting;
@@ -82,6 +82,8 @@ async function createWindow() {
     createProtocol("app");
     // Load the index.html when not in development
     window.loadURL("app://./index.html");
+    autoUpdater.checkForUpdatesAndNotify()
+    // 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
   }
 }
 
