@@ -9,12 +9,13 @@ import {
   Menu,
   nativeImage,
 } from "electron";
-import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
-import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
+import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
+import installExtension, {VUEJS_DEVTOOLS} from "electron-devtools-installer";
 import psList from "ps-list";
 import path from "path";
 import settings from "electron-settings";
-import { autoUpdater } from "electron-updater"
+import {autoUpdater} from "electron-updater"
+
 const isDevelopment = process.env.NODE_ENV !== "production";
 let tray;
 let isQuiting;
@@ -22,11 +23,11 @@ let window;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } },
+  {scheme: "app", privileges: {secure: true, standard: true}},
 ]);
 
 async function getProcesses() {
-  return (await psList()).map((p) => ({ ...p, cmd: p.cmd || p.name }));
+  return (await psList()).map((p) => ({...p, cmd: p.cmd || p.name}));
 }
 
 function cleanCmd(process) {
@@ -54,7 +55,7 @@ async function scanProcesses(win) {
       showOnNextClose = true;
     }
   } catch (e) {
-    
+
   }
 }
 
@@ -82,9 +83,11 @@ async function createWindow() {
     createProtocol("app");
     // Load the index.html when not in development
     window.loadURL("app://./index.html");
-    autoUpdater.checkForUpdatesAndNotify()
-    // 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
+
   }
+  window.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
 }
 
 app.on("before-quit", function () {
@@ -141,7 +144,6 @@ app.on("ready", async () => {
   ]);
 
   tray.setContextMenu(contextMenu);
-
   await createWindow();
 
   window.hide();
@@ -169,7 +171,6 @@ app.on("ready", async () => {
   if (app.dock) {
     app.dock.hide();
   }
-
 
 
   setInterval(() => scanProcesses(window), 2000);
@@ -200,3 +201,7 @@ if (isDevelopment) {
     });
   }
 }
+
+
+
+

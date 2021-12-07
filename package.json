@@ -1,7 +1,7 @@
 {
   "name": "toothy-tron",
   "description": "An app to save toothy pics",
-  "version": "0.1.6",
+  "version": "0.1.92",
   "private": true,
   "repository": {
     "type" : "git",

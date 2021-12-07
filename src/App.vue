@@ -1,5 +1,6 @@
 <template>
   <div>
+    2
     <router-view />
     <div v-if="loading" class="absolute w-screen h-screen bg-white z-10">
       <div class="flex flex-col justify-center items-center w-full h-full">
@@ -16,6 +17,7 @@
 import Vue from "vue";
 import LoadingSvg from "@/assets/svg/loading.svg";
 import { auth } from "./db";
+
 
 const loadingState = Vue.observable({
   loading: false,
