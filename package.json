@@ -3,6 +3,10 @@
   "description": "An app to save toothy pics",
   "version": "0.1.6",
   "private": true,
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/analyticsflowee/toothy-tron"
+  },
   "author": {
     "name": "Analytics Flow",
     "email": "info@analyticsflow.ee"
@@ -11,7 +15,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build --win",
+    "electron:build": "vue-cli-service electron:build --win --publish never",
+    "electron:deploy": "vue-cli-service electron:build --win --publish always",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
