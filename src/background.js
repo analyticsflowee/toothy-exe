@@ -8,13 +8,15 @@ import {
   Tray,
   Menu,
   nativeImage,
+  dialog,
 } from "electron";
-import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
-import installExtension, {VUEJS_DEVTOOLS} from "electron-devtools-installer";
+import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
+import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import psList from "ps-list";
 import path from "path";
 import settings from "electron-settings";
-import {autoUpdater} from "electron-updater"
+import { autoUpdater } from "electron-updater";
+// import {autoUpdater} from "electron-updater"
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 let tray;
@@ -23,11 +25,11 @@ let window;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  {scheme: "app", privileges: {secure: true, standard: true}},
+  { scheme: "app", privileges: { secure: true, standard: true } },
 ]);
 
 async function getProcesses() {
-  return (await psList()).map((p) => ({...p, cmd: p.cmd || p.name}));
+  return (await psList()).map((p) => ({ ...p, cmd: p.cmd || p.name }));
 }
 
 function cleanCmd(process) {
@@ -54,9 +56,7 @@ async function scanProcesses(win) {
     } else if (find) {
       showOnNextClose = true;
     }
-  } catch (e) {
-
-  }
+  } catch (e) {}
 }
 
 async function createWindow() {
@@ -69,9 +69,8 @@ async function createWindow() {
     webPreferences: {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       preload: path.join(__dirname, "preload.js"),
-      enableRemoteModule: true,
-      // TODO: false when production
-      devTools: true
+      enableRemoteModule: true, // TODO: false when production
+      devTools: true,
     },
   });
 
@@ -83,10 +82,27 @@ async function createWindow() {
     createProtocol("app");
     // Load the index.html when not in development
     window.loadURL("app://./index.html");
-
   }
-  window.once('ready-to-show', () => {
-    autoUpdater.checkForUpdatesAndNotify();
+  window.once("ready-to-show", async () => {
+    autoUpdater.autoDownload = false;
+    window.title = `Toothy Tron ${autoUpdater.currentVersion.version}`;
+    const latestVersion = await autoUpdater.checkForUpdates();
+    if (
+      autoUpdater.currentVersion.version.toString() !==
+      latestVersion.updateInfo.version.toString()
+    ) {
+      const updateNow = await dialog.showMessageBox(window, {
+        type: "question",
+        title: "Uus versioon!",
+        message: "Toothy tron uus versioon on väljas, uuenda kohe?",
+        detail: latestVersion.updateInfo.version.toString(),
+        buttons: ["Küsi hiljem uuesti", "Uuendan kohe"],
+      });
+      if (updateNow.response) {
+        await autoUpdater.downloadUpdate();
+        await autoUpdater.quitAndInstall();
+      }
+    }
   });
 }
 
@@ -172,7 +188,6 @@ app.on("ready", async () => {
     app.dock.hide();
   }
 
-
   setInterval(() => scanProcesses(window), 2000);
 
   ipcMain.handle("get-processes", getProcesses);
@@ -201,7 +216,3 @@ if (isDevelopment) {
     });
   }
 }
-
-
-
-

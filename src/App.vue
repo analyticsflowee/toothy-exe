@@ -1,10 +1,9 @@
 <template>
   <div>
-    3
-    <router-view />
+    <router-view/>
     <div v-if="loading" class="absolute w-screen h-screen bg-white z-10">
       <div class="flex flex-col justify-center items-center w-full h-full">
-        <LoadingSvg class="w-96 h-96" />
+        <LoadingSvg class="w-96 h-96"/>
         <p class="text-xl font-extrabold">
           <span>{{ $t("loading") }}</span>
         </p>
@@ -16,8 +15,7 @@
 <script>
 import Vue from "vue";
 import LoadingSvg from "@/assets/svg/loading.svg";
-import { auth } from "./db";
-
+import {auth} from "./db";
 
 const loadingState = Vue.observable({
   loading: false,
@@ -30,7 +28,7 @@ export default {
   components: {
     LoadingSvg,
   },
-  provide: { loadingState },
+  provide: {loadingState},
   data() {
     return {
       error: false,
@@ -43,10 +41,10 @@ export default {
   },
   methods: {
     updateOnlineStatus() {
-      if (!navigator.onLine) this.$router.push({ name: "NoConnection" });
+      if (!navigator.onLine) this.$router.push({name: "NoConnection"});
       else {
         if (this.$route.name === "NoConnection")
-          this.$router.push({ name: "MainArea" });
+          this.$router.push({name: "MainArea"});
       }
     },
   },
@@ -55,7 +53,8 @@ export default {
     await auth;
     loadingState.setLoading(false);
   },
-  mounted() {
+  async mounted() {
+
     this.updateOnlineStatus();
     window.addEventListener("online", this.updateOnlineStatus);
     window.addEventListener("offline", this.updateOnlineStatus);

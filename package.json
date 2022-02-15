@@ -1,17 +1,18 @@
 {
   "name": "toothy-tron",
   "description": "An app to save toothy pics",
-  "version": "0.1.93",
+  "version": "0.2.34",
   "private": true,
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/analyticsflowee/toothy-exe"
+    "type": "git",
+    "url": "https://github.com/analyticsflowee/toothy-exe"
   },
   "author": {
     "name": "Analytics Flow",
     "email": "info@analyticsflow.ee"
   },
   "scripts": {
+    "predeplou": "export GH_TOKEN=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",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",

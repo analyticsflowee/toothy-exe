@@ -5,13 +5,23 @@
     :clinic="clinic"
   >
     <template #left>
-      <AddOperators :clinic-id="cabinetData.clinicUID" v-model="workers" />
+      <AddOperators :clinic-id="cabinetData.clinicUID" v-model="workers"/>
     </template>
     <template #top-left>
       <span>{{ cabinetData.name }}</span>
     </template>
     <template #right>
-      <PictureCounter v-model="snapshots" :disabled="!workers.length" />
+      <div>
+        <div class="w-full inline-flex justify-between">
+          <BasicToggle :value="childPatient" @changeValue="childPatient = !childPatient">
+            Lapspatsient
+          </BasicToggle>
+          <BasicToggle :value="doctorWasInCabinet" @changeValue="doctorWasInCabinet = !doctorWasInCabinet">
+            Arst viibis ülesvõtte ajal ruumis
+          </BasicToggle>
+        </div>
+        <PictureCounter v-model="snapshots" :disabled="!workers.length"/>
+      </div>
     </template>
     <template #footer>
       <div class="w-full flex justify-around">
@@ -51,12 +61,14 @@
 import PageLayout from "@/components/PageLayout";
 import AddOperators from "@/components/AddOperators";
 import PictureCounter from "@/components/PictureCounter";
-import { db } from "@/db";
+import {db} from "@/db";
+import BasicToggle from "@/components/basic/BasicToggle";
 
 export default {
   name: "MainArea",
   inject: ["loadingState"],
   components: {
+    BasicToggle,
     PageLayout,
     AddOperators,
     PictureCounter,
@@ -71,6 +83,8 @@ export default {
       xRayEquipments: [],
       xRayImages: [],
       snapshots: [],
+      childPatient: false,
+      doctorWasInCabinet: false
     };
   },
   computed: {
@@ -89,7 +103,7 @@ export default {
       this.code = (this.code + e.key).substr(-10);
       if (this.code === "Shiftadmin") {
         this.code = "";
-        this.$router.push({ name: "AdminArea" });
+        this.$router.push({name: "AdminArea"});
       }
     },
     saveSnapshot() {
@@ -98,15 +112,19 @@ export default {
         workersUIDs: [...this.workers],
         pictures: [...this.snapshots],
         timestamp: Date.now(),
+        childPatient: this.childPatient,
+        doctorWasInCabinet: this.doctorWasInCabinet
       });
       this.workers = [];
-      this.snapshots = this.snapshots.map((s) => ({ ...s, value: 0 }));
+      this.snapshots = this.snapshots.map((s) => ({...s, value: 0}));
+      this.childPatient = false
+      this.doctorWasInCabinet = false
       window.ipcRenderer.invoke("hide");
     },
     async getCollectionSlice(collection, ids) {
       const querySnapshot = await db.collection(collection).get();
       const items = querySnapshot.docs.filter((d) => ids.includes(d.id));
-      return items.map((d) => ({ ...d.data(), collectionId: d.id }));
+      return items.map((d) => ({...d.data(), collectionId: d.id}));
     },
   },
   async mounted() {
