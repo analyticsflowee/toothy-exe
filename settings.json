@@ -1,1 +1,1 @@
-{"process":{"pid":1,"name":"systemd","cmd":"/sbin/init splash","ppid":0,"uid":0,"cpu":0,"memory":0},"cabinet":"0l6CsdaU1766pKiGODwr"}
+{"process":{"pid":19085,"name":"gedit","cmd":"/usr/bin/gedit --gapplication-service","ppid":1674,"uid":1000,"cpu":15,"memory":0.1},"cabinet":"0l6CsdaU1766pKiGODwr"}

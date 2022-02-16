@@ -115,7 +115,6 @@ export default {
         childPatient: this.childPatient,
         doctorWasInCabinet: this.doctorWasInCabinet
       });
-      this.workers = [];
       this.snapshots = this.snapshots.map((s) => ({...s, value: 0}));
       this.childPatient = false
       this.doctorWasInCabinet = false
